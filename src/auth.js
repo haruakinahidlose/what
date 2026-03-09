@@ -1,37 +1,46 @@
-// public/app.js
-// Base Supabase setup + session utilities
+// src/auth.js
+// Authentication logic for login, signup, logout, and session handling
 
-// IMPORTANT:
-// Replace these with your real values OR rely on Vercel env vars.
-// If using Vercel env vars, they will be injected automatically.
+// --- LOGIN ---
+export async function login(email, password) {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  });
 
-const SUPABASE_URL = window.NEXT_PUBLIC_SUPABASE_URL || "YOUR_SUPABASE_URL";
-const SUPABASE_KEY = window.NEXT_PUBLIC_SUPABASE_ANON_KEY || "YOUR_SUPABASE_ANON_KEY";
+  if (error) {
+    return { error: error.message };
+  }
 
-// Create Supabase client
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// Redirect helper
-function go(path) {
-  window.location.href = path;
+  go("chat.html");
+  return { success: true };
 }
 
-// Check if user is logged in (use this on protected pages like chat.html)
-async function checkAuth() {
-  const { data } = await supabaseClient.auth.getSession();
+// --- SIGNUP ---
+export async function signup(email, password) {
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  go("chat.html");
+  return { success: true };
+}
+
+// --- LOGOUT ---
+export async function logoutUser() {
+  await supabase.auth.signOut();
+  go("login.html");
+}
+
+// --- CHECK SESSION ---
+export async function requireAuth() {
+  const { data } = await supabase.auth.getSession();
   if (!data.session) {
     go("login.html");
   }
 }
-
-// Logout function
-async function logout() {
-  await supabaseClient.auth.signOut();
-  go("login.html");
-}
-
-// Expose globally so other scripts can use it
-window.supabase = supabaseClient;
-window.checkAuth = checkAuth;
-window.logout = logout;
-window.go = go;
