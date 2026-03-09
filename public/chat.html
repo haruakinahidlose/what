@@ -1,1 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!-- Supabase client -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+  <!-- Your global app setup -->
+  <script src="app.js"></script>
+
+  <!-- Chat logic (you will give me this filename next) -->
+  <script src="chat.js" defer></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body onload="checkAuth()">
+
+  <div class="chat-container">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h2 class="sidebar-title">Rooms</h2>
+      <div id="room-list"></div>
+
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <!-- Chat panel -->
+    <div class="chat-panel">
+      <div id="messages" class="messages"></div>
+
+      <div class="message-input">
+        <input id="messageBox" type="text" placeholder="Type a message..." autocomplete="off">
+        <button onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
