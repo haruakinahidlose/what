@@ -2,35 +2,25 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Home</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- Supabase client -->
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-
-  <!-- Global app setup -->
-  <script src="app.js"></script>
-
+  <title>Home — Chat App</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <div class="center-box">
     <h1>Welcome</h1>
-    <p>Loading...</p>
+
+    <button onclick="go('login.html')">Login</button>
+    <button onclick="go('signup.html')">Sign Up</button>
+    <button onclick="go('chat.html')">Enter Chat</button>
+    <button onclick="go('friends.html')">Friends</button>
   </div>
 
-  <script>
-    // If logged in → go to chat
-    // If not logged in → go to login
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) {
-        go("chat.html");
-      } else {
-        go("login.html");
-      }
-    });
-  </script>
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="src/auth.js"></script>
+  <script src="public/app.js"></script>
+  <script src="public/ui.js"></script>
 
 </body>
 </html>
