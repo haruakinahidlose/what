@@ -1,1 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Up</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!-- Supabase client -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+  <!-- Global app setup -->
+  <script src="app.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="auth-container">
+    <h1>Create Account</h1>
+
+    <input id="email" type="email" placeholder="Email" autocomplete="off">
+    <input id="password" type="password" placeholder="Password">
+
+    <button onclick="signup()">Sign Up</button>
+
+    <p class="switch-link">
+      Already have an account? <a href="login.html">Login</a>
+    </p>
+
+    <p id="error" class="error-text"></p>
+  </div>
+
+  <script>
+    async function signup() {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password
+      });
+
+      if (error) {
+        document.getElementById("error").textContent = error.message;
+        return;
+      }
+
+      // Success → go to chat
+      go("chat.html");
+    }
+  </script>
+
+</body>
+</html>
