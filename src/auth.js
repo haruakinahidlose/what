@@ -3,7 +3,7 @@
 // Initialize Supabase client
 const supabase = window.supabase.createClient(
   "https://fnbuvfovrmezsgvrimia.supabase.co",
-  "YOUR_SUPABASE_ANON_KEY"
+  "sb_publishable_RWhWEtS73XO11Ks9DqnvNw_YmG2pjwJ"
 );
 
 // Save session to localStorage
