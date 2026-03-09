@@ -2,52 +2,49 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Login</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- Supabase client -->
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-
-  <!-- Global app setup -->
-  <script src="app.js"></script>
-
+  <title>Login — Chat App</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <div class="auth-container">
+  <div class="center-box">
     <h1>Login</h1>
 
-    <input id="email" type="email" placeholder="Email" autocomplete="off">
+    <input id="email" type="email" placeholder="Email">
     <input id="password" type="password" placeholder="Password">
 
-    <button onclick="login()">Login</button>
+    <button id="login-btn">Login</button>
 
-    <p class="switch-link">
-      No account? <a href="signup.html">Sign up</a>
+    <p>
+      Don't have an account?
+      <a href="signup.html">Sign up</a>
     </p>
-
-    <p id="error" class="error-text"></p>
   </div>
 
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="src/auth.js"></script>
+  <script src="public/app.js"></script>
+  <script src="public/ui.js"></script>
+
   <script>
-    async function login() {
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value;
+    ui.qs("#login-btn").onclick = async () => {
+      const email = ui.qs("#email").value.trim();
+      const password = ui.qs("#password").value.trim();
 
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      });
-
-      if (error) {
-        document.getElementById("error").textContent = error.message;
+      if (!email || !password) {
+        alert("Please fill out all fields");
         return;
       }
 
-      // Success → go to chat
-      go("chat.html");
-    }
+      try {
+        await auth.login(email, password);
+        go("chat.html");
+      } catch (err) {
+        alert("Login failed");
+        console.error(err);
+      }
+    };
   </script>
 
 </body>
