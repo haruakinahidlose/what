@@ -1,46 +1,66 @@
 // src/auth.js
-// Authentication logic for login, signup, logout, and session handling
 
-// --- LOGIN ---
-export async function login(email, password) {
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password
-  });
+// Initialize Supabase client
+const supabase = window.supabase.createClient(
+  "YOUR_SUPABASE_URL",
+  "YOUR_SUPABASE_ANON_KEY"
+);
 
-  if (error) {
-    return { error: error.message };
-  }
-
-  go("chat.html");
-  return { success: true };
-}
-
-// --- SIGNUP ---
-export async function signup(email, password) {
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password
-  });
-
-  if (error) {
-    return { error: error.message };
-  }
-
-  go("chat.html");
-  return { success: true };
-}
-
-// --- LOGOUT ---
-export async function logoutUser() {
-  await supabase.auth.signOut();
-  go("login.html");
-}
-
-// --- CHECK SESSION ---
-export async function requireAuth() {
+// Save session to localStorage
+async function saveSession() {
   const { data } = await supabase.auth.getSession();
-  if (!data.session) {
-    go("login.html");
+  if (data.session) {
+    localStorage.setItem("session", JSON.stringify(data.session));
   }
 }
+
+// Restore session on page load
+async function restoreSession() {
+  const saved = localStorage.getItem("session");
+  if (!saved) return null;
+
+  const session = JSON.parse(saved);
+  await supabase.auth.setSession({
+    access_token: session.access_token,
+    refresh_token: session.refresh_token
+  });
+
+  return session;
+}
+
+// Login
+async function login(email, password) {
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) throw error;
+  await saveSession();
+}
+
+// Signup
+async function signup(email, password) {
+  const { error } = await supabase.auth.signUp({
+    email,
+    password
+  });
+
+  if (error) throw error;
+}
+
+// Logout
+async function logout() {
+  await supabase.auth.signOut();
+  localStorage.removeItem("session");
+  window.location.href = "login.html";
+}
+
+// Export globally
+window.auth = {
+  supabase,
+  login,
+  signup,
+  logout,
+  restoreSession
+};
