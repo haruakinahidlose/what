@@ -2,7 +2,7 @@
 
 // Initialize Supabase client
 const supabase = window.supabase.createClient(
-  "YOUR_SUPABASE_URL",
+  "https://fnbuvfovrmezsgvrimia.supabase.co",
   "YOUR_SUPABASE_ANON_KEY"
 );
 
