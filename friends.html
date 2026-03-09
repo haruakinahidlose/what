@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Friends — Chat App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body onload="friends.init()">
+
+  <div id="app-container">
+
+    <!-- Sidebar -->
+    <div id="sidebar">
+      <h2>Friends</h2>
+      <a href="chat.html"><button>Back to Chat</button></a>
+      <button onclick="auth.logout()">Logout</button>
+    </div>
+
+    <!-- Friends Area -->
+    <div id="friends-area">
+
+      <!-- Search / Add Friend -->
+      <div class="section">
+        <h3>Add Friend</h3>
+        <input id="friend-username" placeholder="Enter username">
+        <button id="send-request-btn">Send Request</button>
+      </div>
+
+      <!-- Incoming Requests -->
+      <div class="section">
+        <h3>Incoming Requests</h3>
+        <div id="incoming-requests"></div>
+      </div>
+
+      <!-- Outgoing Requests -->
+      <div class="section">
+        <h3>Outgoing Requests</h3>
+        <div id="outgoing-requests"></div>
+      </div>
+
+      <!-- Friend List -->
+      <div class="section">
+        <h3>Your Friends</h3>
+        <div id="friend-list"></div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="src/auth.js"></script>
+  <script src="public/friends.js"></script>
+
+</body>
+</html>
