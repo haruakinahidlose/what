@@ -141,20 +141,154 @@ input {
   margin-right: 10px;
 }
 
-/* ====== FRIENDS PAGE (when you add it) ====== */
+/* ================================
+   FRIENDS PAGE — DISCORD STYLE
+================================ */
 
 #friends-container {
-  width: 400px;
-  margin: 40px auto;
+  display: flex;
+  height: 100vh;
+  background: #1e1f22;
+  color: #fff;
+}
+
+/* Sidebar */
+#friends-sidebar {
+  width: 240px;
+  background: #2b2d31;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  border-right: 1px solid #1a1b1e;
+}
+
+#friends-sidebar h2 {
+  margin: 0 0 10px 0;
+  font-size: 22px;
+  color: #fff;
+}
+
+.sidebar-btn {
+  width: 100%;
+  padding: 12px;
+  background: #3b3d42;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 15px;
+}
+
+.sidebar-btn:hover {
+  background: #4b4d52;
+}
+
+/* Main Area */
+#friends-main {
+  flex: 1;
+  padding: 25px;
+  overflow-y: auto;
+}
+
+/* Sections */
+.friends-section {
   background: #2b2d31;
   padding: 20px;
   border-radius: 8px;
+  margin-bottom: 25px;
 }
 
-.friend-item,
+.friends-section h3 {
+  margin: 0 0 15px 0;
+  font-size: 18px;
+}
+
+/* Add Friend */
+.add-friend-box {
+  display: flex;
+  gap: 10px;
+}
+
+#friend-username {
+  flex: 1;
+  padding: 12px;
+  border-radius: 6px;
+  border: none;
+  background: #1a1b1e;
+  color: #fff;
+  font-size: 15px;
+}
+
+#send-request-btn {
+  padding: 12px 18px;
+  background: #5865f2;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+#send-request-btn:hover {
+  background: #4752c4;
+}
+
+/* Lists */
+.list-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Request Items */
 .request-item {
-  background: #3a3c41;
-  padding: 10px;
-  border-radius: 4px;
-  margin-bottom: 8px;
+  background: #1a1b1e;
+  padding: 14px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.request-item strong {
+  font-size: 16px;
+}
+
+.request-item button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left: 6px;
+  font-size: 14px;
+}
+
+/* Accept */
+.request-item button:nth-child(2) {
+  background: #3ba55d;
+  color: white;
+}
+
+.request-item button:nth-child(2):hover {
+  background: #2d7d46;
+}
+
+/* Reject */
+.request-item button:nth-child(3) {
+  background: #ed4245;
+  color: white;
+}
+
+.request-item button:nth-child(3):hover {
+  background: #b53538;
+}
+
+/* Friend List Items */
+.friend-item {
+  background: #1a1b1e;
+  padding: 14px;
+  border-radius: 6px;
+  font-size: 16px;
 }
