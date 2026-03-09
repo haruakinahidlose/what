@@ -1,164 +1,109 @@
-// public/chat.js
+// Load current user + profile (from src/auth.js)
+async function loadUser() {
+  const user = await getCurrentUser();
+  if (!user) {
+    window.location.href = "login.html";
+    return;
+  }
+  return user;
+}
 
+let currentUser = null;
 let currentRoom = null;
-let messageSubscription = null;
 
-// Load all rooms for the user
+// Initialize on page load
+window.onload = async () => {
+  currentUser = await loadUser();
+  document.getElementById("username-display").textContent =
+    currentUser.profile.username;
+
+  loadRooms();
+};
+
+// -----------------------------
+// LOAD ROOMS
+// -----------------------------
 async function loadRooms() {
-  const user = await app.getUser();
-  if (!user) return;
-
-  const { data, error } = await auth.supabase
+  const { data: rooms } = await supabase
     .from("rooms")
     .select("*")
     .order("created_at", { ascending: true });
 
-  if (error) {
-    console.error("Error loading rooms:", error);
-    return;
-  }
-
-  renderRooms(data);
-}
-
-// Render room list
-function renderRooms(rooms) {
-  const list = ui.qs("#room-list");
+  const list = document.getElementById("room-list");
   list.innerHTML = "";
 
   rooms.forEach(room => {
     const div = document.createElement("div");
     div.className = "room-item";
     div.textContent = room.name;
-
-    div.onclick = () => {
-      switchRoom(room.id, room.name);
-    };
-
+    div.onclick = () => openRoom(room.id);
     list.appendChild(div);
   });
 }
 
-// Switch to a room
-async function switchRoom(roomId, roomName) {
+// -----------------------------
+// OPEN ROOM + LOAD MESSAGES
+// -----------------------------
+async function openRoom(roomId) {
   currentRoom = roomId;
 
-  ui.qs("#current-room-name").textContent = roomName;
-
-  // Unsubscribe from previous room
-  if (messageSubscription) {
-    auth.supabase.removeChannel(messageSubscription);
-  }
-
-  // Load messages
-  await loadMessages(roomId);
+  document.getElementById("messages").innerHTML = "";
+  loadMessages(roomId);
 
   // Subscribe to realtime messages
-  messageSubscription = auth.supabase
+  supabase
     .channel("room-" + roomId)
     .on(
       "postgres_changes",
       { event: "INSERT", schema: "public", table: "messages", filter: `room_id=eq.${roomId}` },
-      payload => {
-        appendMessage(payload.new);
-      }
+      payload => addMessage(payload.new)
     )
     .subscribe();
 }
 
-// Load messages for a room
+// -----------------------------
+// LOAD MESSAGES
+// -----------------------------
 async function loadMessages(roomId) {
-  const { data, error } = await auth.supabase
+  const { data: msgs } = await supabase
     .from("messages")
     .select("*")
     .eq("room_id", roomId)
     .order("created_at", { ascending: true });
 
-  if (error) {
-    console.error("Error loading messages:", error);
-    return;
-  }
-
-  renderMessages(data);
+  msgs.forEach(addMessage);
 }
 
-// Render all messages
-function renderMessages(messages) {
-  const box = ui.qs("#messages");
-  box.innerHTML = "";
-
-  messages.forEach(msg => appendMessage(msg));
-
-  box.scrollTop = box.scrollHeight;
-}
-
-// Append a single message
-function appendMessage(msg) {
-  const box = ui.qs("#messages");
+// -----------------------------
+// RENDER MESSAGE
+// -----------------------------
+function addMessage(msg) {
+  const box = document.getElementById("messages");
 
   const div = document.createElement("div");
   div.className = "message";
 
   div.innerHTML = `
-    <strong>${msg.username || "User"}:</strong>
-    <span>${msg.content}</span>
+    <strong>${msg.username}</strong>: ${msg.content}
   `;
 
   box.appendChild(div);
   box.scrollTop = box.scrollHeight;
 }
 
-// Send a message
-async function sendMessage() {
-  if (!currentRoom) return;
+// -----------------------------
+// SEND MESSAGE
+// -----------------------------
+document.getElementById("send-btn").onclick = async () => {
+  const text = document.getElementById("message-input").value.trim();
+  if (!text || !currentRoom) return;
 
-  const input = ui.qs("#message-input");
-  const text = input.value.trim();
-  if (!text) return;
-
-  const user = await app.getUser();
-
-  const { error } = await auth.supabase.from("messages").insert({
+  await supabase.from("messages").insert({
     room_id: currentRoom,
-    user_id: user.id,
-    username: user.email.split("@")[0],
+    user_id: currentUser.id,
+    username: currentUser.profile.username,
     content: text
   });
 
-  if (error) {
-    console.error("Error sending message:", error);
-    return;
-  }
-
-  input.value = "";
-}
-
-// Create a new room
-async function createRoom() {
-  const name = prompt("Room name:");
-  if (!name) return;
-
-  const { error } = await auth.supabase.from("rooms").insert({
-    name
-  });
-
-  if (error) {
-    console.error("Error creating room:", error);
-    return;
-  }
-
-  loadRooms();
-}
-
-// Initialize chat page
-async function initChat() {
-  await app.requireAuth();
-  await loadRooms();
-
-  ui.qs("#send-btn").onclick = sendMessage;
-  ui.qs("#create-room-btn").onclick = createRoom;
-}
-
-window.chat = {
-  initChat
+  document.getElementById("message-input").value = "";
 };
