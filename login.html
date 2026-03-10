@@ -7,6 +7,29 @@
 </head>
 <body>
 
+  <!-- Debug output box (for iPad) -->
+  <pre id="debug-box" style="
+    color:white;
+    background:#000;
+    padding:10px;
+    margin-bottom:20px;
+    font-size:12px;
+    white-space:pre-wrap;
+    max-height:200px;
+    overflow-y:auto;
+  ">
+[Debug output will appear here]
+  </pre>
+
+  <!-- Global debug() function so auth.js can log -->
+  <script>
+    function debug(msg, obj) {
+      const box = document.getElementById("debug-box");
+      box.innerText += "\n" + msg + (obj ? " " + JSON.stringify(obj) : "");
+      console.log(msg, obj || "");
+    }
+  </script>
+
   <div class="center-box">
     <h1>Login</h1>
 
@@ -21,20 +44,6 @@
     </p>
   </div>
 
-  <!-- Debug output box (for iPad) -->
-  <pre id="debug-box" style="
-    color:white;
-    background:#000;
-    padding:10px;
-    margin-top:20px;
-    font-size:12px;
-    white-space:pre-wrap;
-    max-height:200px;
-    overflow-y:auto;
-  ">
-[Debug output will appear here]
-  </pre>
-
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="src/auth.js"></script>
@@ -42,13 +51,6 @@
   <script src="public/ui.js"></script>
 
   <script>
-    // Add a quick debug log for the login page itself
-    const dbg = document.getElementById("debug-box");
-    function debug(msg, obj) {
-      dbg.innerText += "\n" + msg + (obj ? " " + JSON.stringify(obj) : "");
-      console.log(msg, obj || "");
-    }
-
     debug("[login.html] Page loaded");
 
     ui.qs("#login-btn").onclick = async () => {
