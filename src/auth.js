@@ -76,4 +76,42 @@ async function login(email, password) {
 }
 
 // Signup
-async function signup
+async function signup(email, password) {
+  debug("[auth.js] signup() called:", { email, password });
+
+  const { data, error } = await client.auth.signUp({
+    email,
+    password
+  });
+
+  debug("[auth.js] signUp() result:", { data, error });
+
+  if (error) {
+    alert("Signup error: " + error.message);
+    throw error;
+  }
+}
+
+// Logout
+async function logout() {
+  debug("[auth.js] logout() called");
+
+  const { error } = await client.auth.signOut();
+  debug("[auth.js] signOut() result:", error);
+
+  localStorage.removeItem("session");
+  debug("[auth.js] Session removed");
+
+  window.location.href = "login.html";
+}
+
+// Export globally
+window.auth = {
+  supabase: client,
+  login,
+  signup,
+  logout,
+  restoreSession
+};
+
+debug("[auth.js] Exported auth object:", window.auth);
