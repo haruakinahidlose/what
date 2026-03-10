@@ -1,14 +1,14 @@
 // src/auth.js
 
 // Initialize Supabase client (CDN version)
-const supabase = supabase.createClient(
+const client = supabase.createClient(
   "https://fnbuvfovrmezsgvrimia.supabase.co",
   "sb_publishable_RWhWEtS73XO11Ks9DqnvNw_YmG2pjwJ"
 );
 
 // Save session to localStorage
 async function saveSession() {
-  const { data } = await supabase.auth.getSession();
+  const { data } = await client.auth.getSession();
   if (data.session) {
     localStorage.setItem("session", JSON.stringify(data.session));
   }
@@ -20,7 +20,7 @@ async function restoreSession() {
   if (!saved) return null;
 
   const session = JSON.parse(saved);
-  await supabase.auth.setSession({
+  await client.auth.setSession({
     access_token: session.access_token,
     refresh_token: session.refresh_token
   });
@@ -30,7 +30,7 @@ async function restoreSession() {
 
 // Login
 async function login(email, password) {
-  const { error } = await supabase.auth.signInWithPassword({
+  const { error } = await client.auth.signInWithPassword({
     email,
     password
   });
@@ -41,7 +41,7 @@ async function login(email, password) {
 
 // Signup
 async function signup(email, password) {
-  const { error } = await supabase.auth.signUp({
+  const { error } = await client.auth.signUp({
     email,
     password
   });
@@ -51,17 +51,18 @@ async function signup(email, password) {
 
 // Logout
 async function logout() {
-  await supabase.auth.signOut();
+  await client.auth.signOut();
   localStorage.removeItem("session");
   window.location.href = "login.html";
 }
 
 // Export globally
 window.auth = {
-  supabase,
+  supabase: client,
   login,
   signup,
   logout,
   restoreSession
 };
-console.log("supabase client:", supabase);
+
+console.log("supabase client:", client);
