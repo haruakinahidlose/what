@@ -64,3 +64,4 @@ window.auth = {
   logout,
   restoreSession
 };
+console.log("supabase client:", supabase);
