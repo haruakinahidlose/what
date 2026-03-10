@@ -1,6 +1,5 @@
 // src/auth.js
 
-// A simple on‑screen logger for iPad
 function debug(msg, obj) {
   try {
     const box = document.getElementById("debug-box");
@@ -11,9 +10,12 @@ function debug(msg, obj) {
   console.log(msg, obj || "");
 }
 
-// Initialize Supabase client (CDN version)
-debug("[auth.js] Supabase global:", typeof supabase);
+debug("[auth.js] Loaded auth.js file");
 
+// Check Supabase global
+debug("[auth.js] Supabase global type:", typeof supabase);
+
+// Create client
 const client = supabase.createClient(
   "https://fnbuvfovrmezsgvrimia.supabase.co",
   "sb_publishable_RWhWEtS73XO11Ks9DqnvNw_YmG2pjwJ"
@@ -21,7 +23,7 @@ const client = supabase.createClient(
 
 debug("[auth.js] Supabase client created:", client);
 
-// Save session to localStorage
+// Save session
 async function saveSession() {
   debug("[auth.js] saveSession() called");
 
@@ -34,7 +36,7 @@ async function saveSession() {
   }
 }
 
-// Restore session on page load
+// Restore session
 async function restoreSession() {
   debug("[auth.js] restoreSession() called");
 
@@ -105,7 +107,7 @@ async function logout() {
   window.location.href = "login.html";
 }
 
-// Export globally
+// Export
 window.auth = {
   supabase: client,
   login,
