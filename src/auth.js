@@ -1,7 +1,7 @@
 // src/auth.js
 
-// Initialize Supabase client
-const supabase = window.supabase.createClient(
+// Initialize Supabase client (CDN version)
+const supabase = supabase.createClient(
   "https://fnbuvfovrmezsgvrimia.supabase.co",
   "sb_publishable_RWhWEtS73XO11Ks9DqnvNw_YmG2pjwJ"
 );
