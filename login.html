@@ -7,7 +7,7 @@
 </head>
 <body>
 
-  <!-- Debug output box (for iPad) -->
+  <!-- Debug output box -->
   <pre id="debug-box" style="
     color:white;
     background:#000;
@@ -17,11 +17,9 @@
     white-space:pre-wrap;
     max-height:200px;
     overflow-y:auto;
-  ">
-[Debug output will appear here]
-  </pre>
+  ">[Debug output will appear here]</pre>
 
-  <!-- Global debug() function so auth.js can log -->
+  <!-- Global debug() -->
   <script>
     function debug(msg, obj) {
       const box = document.getElementById("debug-box");
